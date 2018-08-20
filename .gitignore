@@ -1,0 +1,5 @@
+*__pycache__*
+*.swp
+.ipynb_checkpoints/*
+basic-agent-data.txt
+sample-agent-data.txt
