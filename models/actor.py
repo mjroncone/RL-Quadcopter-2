@@ -1,5 +1,4 @@
-from keras import layers, models, optimizers
-from keras import backend
+from keras import layers, models, optimizers, backend
 
 # Actor model based on https://classroom.udacity.com/nanodegrees/nd009t/parts/ac12e0fe-e54e-40d5-b0f8-136dbdd1987b/modules/691b7845-f7d8-413d-90c7-971cd5016b5c/lessons/fef7e79a-0941-460b-936c-d24c759ff700/concepts/d254347a-68f4-47d0-912a-33fd79719cf8#
 
