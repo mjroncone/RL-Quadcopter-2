@@ -37,7 +37,7 @@ class Actor:
         actions = layers.Lambda(lambda x: (x * self.action_range) + self.action_low,
                 name='actions')(raw_actions)
 
-        self.model = models.Model(inputs=staes, outputs=actions)
+        self.model = models.Model(inputs=states, outputs=actions)
 
         # Defines the loss function using action value gradients
         action_gradients = layers.Input(shape=(self.action_size,))
