@@ -24,7 +24,7 @@ class Actor:
 
     def build_model(self):
         """Returns a policy network which maps states to actions"""
-        kstates = layers.Input(shape = (self.state_size, ), name = 'states')
+        states = layers.Input(shape = (self.state_size, ), name = 'states')
 
         net = layers.Dense(units=32, activation='relu')(states)
         net = layers.Dense(units=64, activation='relu')(net)
