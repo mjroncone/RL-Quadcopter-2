@@ -37,17 +37,25 @@ class DDPG_Agent():
         self.batch_size = 64
         self.buffer = ReplayBuffer(self.buffer_size, self.batch_size)
 
+        self.score = 0
+        self.best_score = -np.inf
         self.gamma = 0.99
         self.tau = 0.01
 
+
     def reset_episode(self):
+        self.total_reward = 0
+        self.count = 0
+
         self.noise.reset()
         state = self.task.reset()
         self.last_state = state
         return state
 
     def step(self, action, reward, next_state, done):
-        self.buffer.add(self.last_state, action, reward, next_state, done)  
+        self.buffer.add(self.last_state, action, reward, next_state, done)
+        self.count += 1
+        self.total_reward += reward
 
         if len(self.buffer) > self.batch_size:
             experiences = self.buffer.sample()
@@ -61,7 +69,11 @@ class DDPG_Agent():
         return list(action + self.noise.sample())
 
     def learn(self, experiences):
-        state = np.vstack([e.state for e in experiences if e is not None])
+        self.score = self.total_reward / float(self.count) if self.count else 0
+        if self.score > self.best_score:
+            self.best_score = self.score
+
+        states = np.vstack([e.state for e in experiences if e is not None])
         actions = np.array([e.action for e in experiences if e is not None]).astype(np.float32).reshape(-1, self.action_size)
         rewards = np.array([e.reward for e in experiences if e is not None]).astype(np.float32).reshape(-1, 1)
         dones = np.array([e.done for e in experiences if e is not None]).astype(np.uint8).reshape(-1, 1)
@@ -74,7 +86,7 @@ class DDPG_Agent():
         self.critic_local.model.train_on_batch(x=[states, actions], y=Q_targets)
 
         action_gradients = np.reshape(self.critic_local.get_action_gradients([states, actions, 0]), (-1, self.action_size))
-        self.actor_local.train_fn([states, action_gradients, 1])
+        self.actor_local.train_function([states, action_gradients, 1])
 
         self.soft_update(self.critic_local.model, self.critic_target.model)
         self.soft_update(self.actor_local.model, self.actor_target.model)
