@@ -28,9 +28,9 @@ class Task():
 
     def get_reward(self):
         """Uses current pose of sim to return reward."""
-        x_reward = self.quadratic_reward(self.target_pos[0] - self.sim.pose[0], 0)
+        x_reward = self.quadratic_reward(self.target_pos[0] - self.sim.pose[0], 0) / 2
         y_reward = self.quadratic_reward(self.target_pos[1] - self.sim.pose[1], 0) / 2
-        z_reward = self.quadratic_reward(self.target_pos[2] - self.sim.pose[2], 1) / 2
+        z_reward = self.quadratic_reward(self.target_pos[2] - self.sim.pose[2], 1)
 
         return x_reward + y_reward + z_reward
 
